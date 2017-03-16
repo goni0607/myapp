@@ -12,9 +12,11 @@
 */
 
 Route::get('/', function () {
+	$items = ['apple', 'banana', 'tomato'];
     return view('welcome')->with([
     		'name' => 'triplek',
-    		'greeting' => '안녕하세요?'
+    		'greeting' => '안녕하세요?',
+    		'items' => $items
     		]);
 });
 
