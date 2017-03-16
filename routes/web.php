@@ -11,7 +11,41 @@
 |
 */
 
-Route::get('/', 'WelcomeController@index');
+// Route::get('/', 'WelcomeController@index');
+
+
+/* Route for user authorization */
+/*
+Route::get('auth/login', function() {
+	$credentials = [
+		'email' => 'John@example.com',
+		'password' => 'password'
+	];
+
+	if (!auth()->attempt($credentials, true)) {
+		return '로그인 정보가 정확하지 않습니다.';
+	}
+
+	return redirect('protected');
+});
+
+Route::get('protected', function() {
+	dump(session()->all());
+
+	if (!auth()->check()) {
+		return 'Who are you?';
+	}
+
+	return 'Welcome ' . auth()->user()->name;
+});
+
+Route::get('auth/logout', function() {
+	auth()->logout();
+
+	return 'See you next';
+});
+*/
+
 
 Route::resource('articles', 'ArticlesController');
 
@@ -77,3 +111,6 @@ Route::get('/{foo?}', function ($foo = 'bar') {
 	return $foo;
 });
 */
+Auth::routes();
+
+Route::get('/home', 'HomeController@index');
