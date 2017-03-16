@@ -13,6 +13,8 @@
 @endsection
 
 @section('content')
+<?php
+    /*
     <h1><?= isset($greeting) ? "{$greeting} " : 'Hello '; ?><?= $name; ?></h1>
     
     <h1>Example for string interpolation</h1>
@@ -29,7 +31,7 @@
         <p>엥~ 아무것도 없는데요!</p>
     @endif
 
-    <?php /* $items = []; */ ?>
+    <?php $items = []; ?>
     <h1>Example for repetitive statement</h1>
 
     <h2>foreach statement</h2>
@@ -47,7 +49,8 @@
             <li>엥~ 아무것도 없는데요!</li>
         @endforelse
     </ul>
-
+    */
+?>
     <p>이 페이지는 자식 뷰의 'content' 섹션입니다.</p>
 
     @include('partials.footer')

@@ -11,6 +11,11 @@
 |
 */
 
+Route::get('/', 'WelcomeController@index');
+
+Route::resource('articles', 'ArticlesController');
+
+/*
 Route::get('/', function () {
 	$items = ['apple', 'banana', 'tomato'];
     return view('welcome')->with([
@@ -19,6 +24,7 @@ Route::get('/', function () {
     		'items' => $items
     		]);
 });
+*/
 
 /*
 // route 이름 변경
