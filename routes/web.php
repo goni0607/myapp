@@ -11,6 +11,16 @@
 |
 */
 
+Route::get('/', function () {
+    return view('welcome')->with([
+    		'name' => 'triplek',
+    		'greeting' => '안녕하세요?'
+    		]);
+});
+
+/*
+// route 이름 변경
+
 Route::get('/', [
 	'as' => 'home',
 	function (){
@@ -21,6 +31,7 @@ Route::get('/', [
 Route::get('/home', function() {
 	return redirect(route('home'));
 });
+*/
 
 /*
 
