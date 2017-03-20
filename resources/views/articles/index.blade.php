@@ -22,6 +22,8 @@
 			{!! $articles->render() !!}
 		</div>
 		@endif
+
+		<a href="{{ route('articles.create') }}" class="btn">글 작성하기</a>
 	</div>
 
 @stop

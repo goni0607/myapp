@@ -15,13 +15,12 @@ Route::get('/', 'WelcomeController@index');
 
 Route::resource('articles', 'ArticlesController');
 
-
-// debuging query.
+/* debuging query. 
 DB::listen(function ($query) {
 	//var_dump($query->sql);
 	var_dump($query->sql);
 });
-
+*/
 
 /* Route for user authorization */
 /*
