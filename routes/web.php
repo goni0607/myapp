@@ -11,7 +11,16 @@
 |
 */
 
-// Route::get('/', 'WelcomeController@index');
+Route::get('/', 'WelcomeController@index');
+
+Route::resource('articles', 'ArticlesController');
+
+
+// debuging query.
+DB::listen(function ($query) {
+	//var_dump($query->sql);
+	var_dump($query->sql);
+});
 
 
 /* Route for user authorization */
@@ -45,9 +54,6 @@ Route::get('auth/logout', function() {
 	return 'See you next';
 });
 */
-
-
-Route::resource('articles', 'ArticlesController');
 
 /*
 Route::get('/', function () {
