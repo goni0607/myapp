@@ -15,6 +15,21 @@ Route::get('/', 'WelcomeController@index');
 
 Route::resource('articles', 'ArticlesController');
 
+Route::get('mail', function () {
+	$article = App\Article::with('user')->find(1);
+
+	return Mail::send(
+		'emails.articles.created',
+		compact('article'),
+		function ($message) use ($article) {
+			$message->from('triplek@triplek.net', 'triplek');
+			$message->to(['triplek@triplek.net', 'goni0607@naver.com']);
+			$message->subject('새 글이 등록되었습니다.-' . $article->title);
+			$message->cc('triplek@weonit.co.kr');
+			$message->attach(storage_path('kittycheki.png'));
+		}
+	);
+});
 /* debuging query. 
 DB::listen(function ($query) {
 	//var_dump($query->sql);
