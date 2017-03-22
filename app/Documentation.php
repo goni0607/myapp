@@ -15,10 +15,24 @@ class Documentation extends Model
 	}
 
 
-	protected function path($file)
+	public function image($file)
 	{
-		$file = ends_with($file, '.md') ? $file : $file . '.md';
-		$path = base_path('docs' . DIRECTORY_SEPARATOR . $file);
+		return \Image::make($this->path($file, 'docs/images'));
+	}
+
+
+	public function etag($file)
+	{
+		$lastModified = File::lastModified($this->path($file, 'docs/images'));
+
+		return md5($file . $lastModified);
+	}
+
+
+	protected function path($file, $dir = 'docs')
+	{
+		$file = ends_with($file, ['.md', '.png']) ? $file : $file . '.md';
+		$path = base_path($dir . DIRECTORY_SEPARATOR . $file);
 
 		if (!File::exists($path)) {
 			abort(404, 'File Not Found.');
