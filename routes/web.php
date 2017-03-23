@@ -11,9 +11,15 @@
 |
 */
 
-Route::get('/', 'WelcomeController@index');
+Route::get('/', 'HomeController@index');
 
 Route::resource('articles', 'ArticlesController');
+
+/* 언어 선택 */
+Route::get('locale', [
+    'as' => 'locale',
+    'uses' => 'WelcomeController@locale',
+]);
 
 Route::get('mail', function () {
 	$article = App\Article::with('user')->find(1);

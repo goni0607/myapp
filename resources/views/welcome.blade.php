@@ -1,16 +1,4 @@
-@extends('layouts.master')
-
-@section('style')
-    <style>
-        body { background-color: green; color: white; }
-    </style>
-@endsection
-
-@section('script')
-    <script type="text/javascript">
-        alert("자식 뷰의 'script' 섹션입니다.");
-    </script>
-@endsection
+@extends('layouts.app')
 
 @section('content')
 <?php
@@ -53,5 +41,4 @@
 ?>
     <p>이 페이지는 자식 뷰의 'content' 섹션입니다.</p>
 
-    @include('partials.footer')
-@endsection
+@stop
