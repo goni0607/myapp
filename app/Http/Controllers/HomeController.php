@@ -23,7 +23,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        flash('Welcome!!');
+        //dd(auth());
+        //auth()->logout();
 
         return view('home');
     }

@@ -15,6 +15,56 @@ Route::get('/', 'HomeController@index');
 
 Route::resource('articles', 'ArticlesController');
 
+/* 라라벨 내장 인증에서 설치한 라우트 삭제 */
+//Auth::routes();
+
+/* 사용자 가입 */
+Route::get('auth/register', [
+	'as'		=> 'users.create',
+	'uses'	=> 'UsersController@create',
+]);
+Route::post('auth/register', [
+	'as'		=> 'users.store',
+	'uses'	=> 'UsersController@store',
+]);
+Route::get('auth/confirm/{code}',[
+	'as'		=> 'users.confirm',
+	'uses'	=> 'UsersController@confirm',
+])->where('code', '[\pL-\pN]{60}');
+
+/* 사용자 인증 */
+Route::get('auth/login', [
+	'as'		=> 'sessions.create',
+	'uses'	=> 'SessionsController@create',
+]);
+Route::post('auth/login', [
+	'as'		=> 'sessions.store',
+	'uses'	=> 'SessionsController@store',
+]);
+Route::post('auth/logout', [
+	'as'		=> 'sessions.destroy',
+	'uses'	=> 'SessionsController@destroy',
+]);
+
+/* 비밀번호 조회 */
+Route::get('auth/remind', [
+	'as'		=> 'remind.create',
+	'uses'	=> 'PasswordsController@getRemind',
+]);
+Route::post('auth/remind', [
+	'as'		=> 'remind.store',
+	'uses'	=> 'PasswordsController@postRemind',
+]);
+Route::get('auth/reset/{token}', [
+	'as'		=> 'reset.create',
+	'uses'	=> 'PasswordsController@getReset',
+])->where('token', '[\pL-\pN]{64}');
+Route::post('auth/reset', [
+	'as'		=> 'reset.store',
+	'uses'	=> 'PasswordsController@postReset',
+]);
+
+
 /* 언어 선택 */
 Route::get('locale', [
     'as' => 'locale',
@@ -169,6 +219,5 @@ Route::get('/{foo?}', function ($foo = 'bar') {
 	return $foo;
 });
 */
-Auth::routes();
 
 Route::get('/home', 'HomeController@index');
