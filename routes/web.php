@@ -65,6 +65,12 @@ Route::post('auth/reset', [
 ]);
 
 
+/* Social Login */
+Route::get('social/{provider}', [
+	'as'		=> 'social.login',
+	'uses'	=> 'SocialController@execute',
+]);
+
 /* 언어 선택 */
 Route::get('locale', [
     'as' => 'locale',
