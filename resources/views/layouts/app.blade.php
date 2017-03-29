@@ -26,7 +26,7 @@
         ]) !!};
     </script>
 </head>
-<body id="app-layer">
+<body id="app">
     @include('layouts.partial.navigation')
     
     <div class="container">

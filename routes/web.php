@@ -33,6 +33,10 @@ Route::get('auth/confirm/{code}',[
 ])->where('code', '[\pL-\pN]{60}');
 
 /* 사용자 인증 */
+Route::get('login', [
+	'as'		=> 'login',
+	'uses'	=> 'SessionsController@create',
+]);
 Route::get('auth/login', [
 	'as'		=> 'sessions.create',
 	'uses'	=> 'SessionsController@create',

@@ -44,4 +44,10 @@ class User extends Authenticatable
     {
         return $query->whereEmail($email)->whereNull('password');
     }
+
+
+    public function isAdmin()
+    {
+        return ($this->email === 'triplek@triplek.net') ? true : false;
+    }
 }

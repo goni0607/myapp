@@ -40,3 +40,15 @@ if (! function_exists('is_api_domain')) {
         return starts_with(request()->getHttpHost(), config('project.api_domain'));
     }
 }
+
+
+function gravatar_url($email, $size = 48)
+{
+    return sprintf("//www.gravatar.com/avatar/%s?s=%s", md5($email), $size);
+}
+
+
+function gravatar_profile_url($email)
+{
+    return sprintf("//www.gravatar.com/%s", md5($email));
+}
