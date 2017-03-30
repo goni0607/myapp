@@ -15,6 +15,8 @@ Route::get('/', 'HomeController@index');
 
 Route::resource('articles', 'ArticlesController');
 
+Route::resource('attachments', 'AttachmentsController', ['only' => ['store', 'destroy']]);
+
 /* 라라벨 내장 인증에서 설치한 라우트 삭제 */
 //Auth::routes();
 
@@ -68,6 +70,11 @@ Route::post('auth/reset', [
 	'uses'	=> 'PasswordsController@postReset',
 ]);
 
+/* tag */
+Route::get('tags/{slug}/articles', [
+	'as'		=> 'tags.articles.index',
+	'uses'	=> 'ArticlesController@index',
+]);
 
 /* Social Login */
 Route::get('social/{provider}', [

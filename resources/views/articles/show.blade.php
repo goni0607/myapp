@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+	@php $viewName = 'articles.show'; @endphp
+
 	<div class="page-header">
 		<h4>포럼<small> / {{ $article->title }}</small></h4>
 	</div>
@@ -8,6 +10,7 @@
 	<article data-id="{{ $article->id }}">
 		@include('articles.partial.article', compact('article'))
 		{!! nl2br(markdown($article->content)) !!}
+		@include('tags.partial.list', ['tags' => $article->tags])
 	</article>
 
 	<div class="text-center action__article">
@@ -23,6 +26,8 @@
 			<i class="fa fa-list"></i> 글 목록
 		</a>
 	</div>
+	{{ sys_get_temp_dir() }}<br />
+	{{ exec("whoami") }}
 @stop
 
 @section('script')

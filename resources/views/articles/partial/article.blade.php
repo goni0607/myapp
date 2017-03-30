@@ -9,5 +9,12 @@
 				<i class="fa fa-user"></i> {{ $article->user->name }}
 				<i class="fa fa-clock-o"></i> {{ $article->created_at->diffForHumans() }}
 			</p>
+		@if ($viewName === 'articles.show')
+			@include('attachments.partial.list', ['attachments' => $article->attachments])
+		@endif
+
+		@if ($viewName === 'articles.index')
+			@include('tags.partial.list', ['tags' => $article->tags])
+		@endif
 		</div>
 	</div>

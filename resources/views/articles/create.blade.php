@@ -5,7 +5,7 @@
 		<h4>포럼 <small> / 글 쓰기</small></h4>
 	</div>
 
-	<form action="{{ route('articles.store') }}" method="post">
+	<form action="{{ route('articles.store') }}" method="post" enctype="multipart/form-data">
 		{!! csrf_field() !!}
 
 		@include('articles.partial.form')

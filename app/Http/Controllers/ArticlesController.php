@@ -11,12 +11,13 @@ class ArticlesController extends Controller
     {
         $this->middleware('auth', ['except' => ['index', 'show']]);
     }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($slug = null)
     {
         // 즉시로드 예제 - with 메소드 사용.
         //$articles = \App\Article::with('user')->get();
@@ -25,8 +26,12 @@ class ArticlesController extends Controller
         //$articles = \App\Article::get();
         //$articles->load('user');
 
+        $query = $slug ? \App\Tag::whereSlug($slug)->firstOrFail()->articles() : new \App\Article;
+
+        $articles = $query->latest()->paginate(5);
+
         // 페이지네이터 예제
-        $articles = \App\Article::latest()->paginate(5);
+        // $articles = \App\Article::latest()->paginate(5);
         $articles->load('user');
 
         //dd(view('articles.index', compact('articles'))->render());
@@ -81,7 +86,24 @@ class ArticlesController extends Controller
             return back()->with('flash_message', '글이 저장되지 않았습니다.')->withInput();
         }
 
-        /*
+        $article->tags()->sync($request->input('tags'));
+
+        /* -- 파일첨부 테스트
+        if ($request->hasFile('files')) {
+            $files = $request->file('files');
+
+            foreach($files as $file) {
+                $filename = str_random().filter_var($file->getClientOriginalName(), FILTER_SANITIZE_URL);
+                $file->move(attachments_path(), $filename);
+
+                $article->attachments()->create([
+                    'filename' => $filename,
+                    'bytes' => $file->getSize(),
+                    'mime' => $file->getClientMimeType(),
+                ]);
+            }
+        }
+
         var_dump('이벤트를 던집니다.');
         //event('article.created', [$article]); -- Event 클래스를 사용하지 않고자 문자열로 이벤트를 사용할 경우
         event(new \App\Events\ArticleCreated($article));
@@ -139,6 +161,8 @@ class ArticlesController extends Controller
     public function update(Request $request, \App\Article $article)
     {
         $article->update($request->all());
+        $article->tags()->sync($request->input('tags'));
+
         flash()->success('수정하신 내용을 저장했습니다.');
 
         return redirect(route('articles.show', $article->id));
