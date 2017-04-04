@@ -17,6 +17,15 @@ Route::resource('articles', 'ArticlesController');
 
 Route::resource('attachments', 'AttachmentsController', ['only' => ['store', 'destroy']]);
 
+Route::resource('comments', 'CommentsController', ['only' => ['update', 'destroy']]);
+
+Route::resource('articles.comments', 'CommentsController', ['only' => ['store']]);
+
+Route::post('comments/{comment}/votes', [
+	'as' 	=> 'comments.vote',
+	'uses'	=> 'CommentsController@vote'
+]);
+
 /* 라라벨 내장 인증에서 설치한 라우트 삭제 */
 //Auth::routes();
 

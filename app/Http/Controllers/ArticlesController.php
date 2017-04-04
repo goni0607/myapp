@@ -128,8 +128,9 @@ class ArticlesController extends Controller
         //$article = \App\Article::findOrFail($id);
         //dd($article);
         //debug($article->toArray());
+        $comments = $article->comments()->with('replies')->whereNull('parent_id')->latest()->get();
         
-        return view('articles.show', compact('article'));
+        return view('articles.show', compact('article', 'comments'));
 
         //return $article->toArray();
 

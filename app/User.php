@@ -40,6 +40,18 @@ class User extends Authenticatable
     }
 
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+
+    public function votes()
+    {
+        return $this->hasMany(Vote::class);
+    }
+
+
     public function scopeSocialUser($query, $email)
     {
         return $query->whereEmail($email)->whereNull('password');

@@ -109,7 +109,7 @@ class UsersController extends Controller
     {
             auth()->login($user);
 
-            flash($user()->name . '님, 환영합니다. 가입 확인되었습니다.');
+            flash($user()->name.'님, 환영합니다. 가입 확인되었습니다.');
 
             return redirect('home');
     }
