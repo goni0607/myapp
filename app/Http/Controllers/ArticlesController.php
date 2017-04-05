@@ -5,19 +5,27 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\ArticlesRequest;
 
-class ArticlesController extends Controller
+class ArticlesController extends Controller implements Cacheable
 {
     public function __construct()
     {
+        parent::__construct();
         $this->middleware('auth', ['except' => ['index', 'show']]);
     }
+
+
+    public function cacheTags()
+    {
+        return 'articles';
+    }
+
 
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($slug = null)
+    public function index(Request $request, $slug = null)
     {
         // 즉시로드 예제 - with 메소드 사용.
         //$articles = \App\Article::with('user')->get();
@@ -25,14 +33,28 @@ class ArticlesController extends Controller
         // 지연로드 예제 - load 메소드 사용.
         //$articles = \App\Article::get();
         //$articles->load('user');
+        
+        $cacheKey = cache_key('articles.index');
 
         $query = $slug ? \App\Tag::whereSlug($slug)->firstOrFail()->articles() : new \App\Article;
 
-        $articles = $query->latest()->paginate(5);
+        $query = $query->orderBy(
+            $request->input('sort', 'created_at'),
+            $request->input('order', 'desc')
+        );
+
+        if ($keyword = request()->input('q')) {
+            $raw = 'MATCH(title,content) AGAINST(? IN BOOLEAN MODE)';
+            $query = $query->whereRaw($raw, [$keyword]);
+        }
+
+        //$articles = $query->latest()->paginate(5);
+        //$articles = $query->paginate(3);
+        $articles = $this->cache($cacheKey, 5, $query, 'paginate', 3);
 
         // 페이지네이터 예제
         // $articles = \App\Article::latest()->paginate(5);
-        $articles->load('user');
+        //$articles->load('user');
 
         //dd(view('articles.index', compact('articles'))->render());
         return view('articles.index', compact('articles'));
@@ -79,7 +101,11 @@ class ArticlesController extends Controller
 
         $this->validate($request, $rules, $messages);
         */
-        $article = $request->user()->articles()->create($request->all());
+        $payload = array_merge($request->all(), [
+            'notification' => $request->has('notification'),
+        ]);
+
+        $article = $request->user()->articles()->create($payload);
         //$article = \App\User::whereEmail(auth()->user()->email)->articles()->create($request->all());
 
         if (!$article) {
@@ -111,8 +137,9 @@ class ArticlesController extends Controller
         */
 
         event(new \App\Events\ArticlesEvent($article));
+        event(new \App\Events\ModelChanged(['articles']));
 
-        return redirect(route('articles.index'))->with('flash_message', '작성하신 글이 저장되었습니다.');
+        return redirect(route('articles.show', $article->id))->with('flash_message', '작성하신 글이 저장되었습니다.');
 
         //return __METHOD__ . '은(는) 사용자의 입력한 폼 데이터로 새로운 Article 컬렉션을 만듭니다.';
     }
@@ -128,7 +155,14 @@ class ArticlesController extends Controller
         //$article = \App\Article::findOrFail($id);
         //dd($article);
         //debug($article->toArray());
-        $comments = $article->comments()->with('replies')->whereNull('parent_id')->latest()->get();
+        $article->view_count += 1;
+        $article->save();
+
+        $comments = $article->comments()
+                                ->with('replies')
+                                ->withTrashed()
+                                ->whereNull('parent_id')
+                                ->latest()->get();
         
         return view('articles.show', compact('article', 'comments'));
 
@@ -161,10 +195,16 @@ class ArticlesController extends Controller
      */
     public function update(Request $request, \App\Article $article)
     {
-        $article->update($request->all());
+        $payload = array_merge($request->all(), [
+            'notification' => $request->has('notification'),
+        ]);
+
+        $article->update($payload);
         $article->tags()->sync($request->input('tags'));
 
         flash()->success('수정하신 내용을 저장했습니다.');
+
+        event(new \App\Events\ModelChanged(['articles']));
 
         return redirect(route('articles.show', $article->id));
     }
@@ -180,6 +220,8 @@ class ArticlesController extends Controller
         $this->authorize('delete', $article);
 
         $article->delete();
+
+        event(new \App\Events\ModelChanged(['articles']));
 
         return response()->json([], 204);
     }

@@ -75,3 +75,47 @@ function format_filesize($bytes)
 
     return round($bytes, 2) . $suffix[$step];
 }
+
+
+function link_for_sort($column, $text, $params = [])
+{
+    $direction = request()->input('order');
+    $reverse = ($direction == 'asc') ? 'desc' : 'asc';
+
+    if (request()->input('sort') == $column) {
+        $text = sprintf("%s %s",
+            $direction == 'asc' ? '<i class="fa fa-sort-alpha-asc"></i>' : '<i class="fa fa-sort-alpha-desc"></i>',
+            $text
+        );
+    }
+
+    $queryString = http_build_query(array_merge(
+        request()->except(['sort', 'order']),
+        ['sort' => $column, 'order' => $reverse],
+        $params
+    ));
+
+    return sprintf(
+        '<a href="%s?%s">%s</a>',
+        urldecode(request()->url()),
+        $queryString,
+        $text
+    );
+}
+
+
+function cache_key($base)
+{
+    $key = ($uri = request()->getQueryString())
+                    ? $base.'.'.urlencode($uri)
+                    : $base;
+
+    return md5($key);
+}
+
+
+/* 캐시 태그 가능여부 판단 도우미 함수 */
+function taggable()
+{
+    return in_array(config('cache.default'), ['memcached', 'redis'], true);
+}

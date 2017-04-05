@@ -29,4 +29,10 @@ class Vote extends Model
     {
         $this->attributes['up'] = $value ? 1 : null;
     }
+
+
+    public function setDownAttribute($value)
+    {
+        $this->attributes['down'] = $value ? 1 : null;
+    }
 }

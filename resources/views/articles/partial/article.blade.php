@@ -7,7 +7,15 @@
 
 			<p class="text-muted">
 				<i class="fa fa-user"></i> {{ $article->user->name }}
-				<i class="fa fa-clock-o"></i> {{ $article->created_at->diffForHumans() }}
+				{{--<i class="fa fa-clock-o"></i> {{ $article->created_at->diffForHumans() }}--}}
+				<small>
+				/ {{ $article->created_at->diffForHumans() }}에 작성
+				&middot; 조회수 {{ $article->view_count }}
+
+				@if ($article->comment_count > 0)
+					&middot; 댓글 {{ $article->comment_count }}
+				@endif
+				</small>
 			</p>
 		@if ($viewName === 'articles.show')
 			@include('attachments.partial.list', ['attachments' => $article->attachments])

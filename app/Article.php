@@ -6,8 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Article extends Model
 {
-    protected $fillable = ['title', 'content'];
-    protected $with = ['user'];
+    protected $fillable = [
+        'title', 
+        'content', 
+        'notification', 
+        'view_count'
+    ];
+
+    protected $with = [
+        'user'
+    ];
+
+
+    /* Relationships */
 
     public function user()
     {
@@ -30,5 +41,13 @@ class Article extends Model
     public function comments()
     {
         return $this->morphMany(Comment::class, 'commentable');
+    }
+
+
+    /* Accessor */
+
+    public function getCommentCountAttribute()
+    {
+        return (int)$this->comments->count();
     }
 }

@@ -10,14 +10,27 @@
 	<div class="row">
 		<div class="col-md-3">
 			<aside>
+				@include('articles.partial.search')
 				@include('tags.partial.index')
 			</aside>
 		</div>
 		<div class="col-md-9">
-			<div class="text-right">
+			<div class="text-right action__article">
 				<a href="{{ route('articles.create') }}" class="btn btn-primary">
 					<i class="fa fa-plus-circle"></i> 새 글 쓰기
 				</a>
+				<div class="btn-group sort__article">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+						<i class="fa fa-sort"></i> 목록 정렬 <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu">
+					@foreach(config('project.sorting') as $column => $text)
+						<li {!! request()->input('sort') == $column ? 'class="active"' : '' !!}>
+							{!! link_for_sort($column, $text) !!}
+						</li>
+					@endforeach
+					</ul>
+				</div>
 			</div>
 
 			<article>
