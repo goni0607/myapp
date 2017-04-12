@@ -119,3 +119,18 @@ function taggable()
 {
     return in_array(config('cache.default'), ['memcached', 'redis'], true);
 }
+
+
+/* 태그 테이블 구조와 전역 태그 구조 변경 함수 */
+function array_transpose(array $data)
+{
+    $res = [];
+
+    foreach ($data as $row => $columns) {
+        foreach ($columns as $row2 => $column2) {
+            $res[$row2][$row] = $column2;
+        }
+    }
+
+    return $res;
+}

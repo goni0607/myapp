@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use App\Http\Requests\ArticlesRequest;
 
 class ArticlesController extends Controller implements Cacheable
@@ -57,8 +58,15 @@ class ArticlesController extends Controller implements Cacheable
         //$articles->load('user');
 
         //dd(view('articles.index', compact('articles'))->render());
+        return $this->respondCollection($articles);
+    }
+
+    protected function respondCollection(LengthAwarePaginator $articles)
+    {
         return view('articles.index', compact('articles'));
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -139,10 +147,20 @@ class ArticlesController extends Controller implements Cacheable
         event(new \App\Events\ArticlesEvent($article));
         event(new \App\Events\ModelChanged(['articles']));
 
-        return redirect(route('articles.show', $article->id))->with('flash_message', '작성하신 글이 저장되었습니다.');
+        // return redirect(route('articles.show', $article->id))->with('flash_message', '작성하신 글이 저장되었습니다.');
+        return respondCreated($article);
 
         //return __METHOD__ . '은(는) 사용자의 입력한 폼 데이터로 새로운 Article 컬렉션을 만듭니다.';
     }
+
+    protected function respondCreated(\App\Article $article)
+    {
+        flash()->success(trans('forum.articles.success_writing'));
+
+        return redirect('articles.show', $article->id);
+    }
+
+
 
     /**
      * Display the specified resource.

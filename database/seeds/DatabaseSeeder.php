@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
             App\Article::truncate();
             $this->call(ArticlesTableSeeder::class);
             
-
+            /* 다국어 미지원 태그 */
             App\Tag::truncate();
             DB::table('article_tag')->truncate();
             $tags = config('project.tags');
@@ -87,29 +87,43 @@ class DatabaseSeeder extends Seeder
             });
 
             $this->command->info('Seeded: votes table');
+
+
+            $faker = app(Faker\Generator::class);
+            
+                foreach(range(1, 10) as $index) {
+                    // 테스트를 위해 고아가 된 첨부파일을 만든다.
+                    // 고아가 된 첨부파일 이란 article_id가 없고 생성된 지 일주일 넘은 테이블 레코드/파일를 의미한다.
+                    $path = $faker->image(attachments_path());
+                    $filename = File::basename($path);
+                    $bytes = File::size($path);
+                    $mime = File::mimeType($path);
+                    $this->command->warn("File saved: {$filename}");
+
+                    factory(App\Attachment::class)->create([
+                        'filename' => $filename,
+                        'bytes' => $bytes,
+                        'mime' => $mime,
+                        'created_at' => $faker->dateTimeBetween('-1 months'),
+                    ]);
+                }
+
+            $this->command->info('Seeded: attachments table and files');
         }
 
+        /* 다국어 지원 태그 */
+        App\Tag::truncate();
+        DB::table('tags')->truncate();
+        $tags = config('project.tags');
 
-        $faker = app(Faker\Generator::class);
-        
-            foreach(range(1, 10) as $index) {
-                // 테스트를 위해 고아가 된 첨부파일을 만든다.
-                // 고아가 된 첨부파일 이란 article_id가 없고 생성된 지 일주일 넘은 테이블 레코드/파일를 의미한다.
-                $path = $faker->image(attachments_path());
-                $filename = File::basename($path);
-                $bytes = File::size($path);
-                $mime = File::mimeType($path);
-                $this->command->warn("File saved: {$filename}");
-
-                factory(App\Attachment::class)->create([
-                    'filename' => $filename,
-                    'bytes' => $bytes,
-                    'mime' => $mime,
-                    'created_at' => $faker->dateTimeBetween('-1 months'),
-                ]);
-            }
-
-        $this->command->info('Seeded: attachments table and files');
+        foreach(array_transpose($tags) as $slug => $names) {
+            App\Tag::create([
+                'name' => $names['ko'],
+                'ko' => $names['ko'],
+                'en' => $names['en'],
+                'slug' => str_slug($slug),
+            ]);
+        }
 
         // Model::reguard();
 

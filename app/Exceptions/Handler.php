@@ -32,6 +32,17 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+        dd($exception);
+        
+        if (app()->environment('production') && $this->shouldReport($exception)) {
+            \Slack::send(sprintf(
+                "%s \n%s \n\n%s",
+                $exception->getMessage(),
+                $exception->getFile(),
+                $exception->getTraceAsString()
+            ));
+        }
+
         parent::report($exception);
     }
 

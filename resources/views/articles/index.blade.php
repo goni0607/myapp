@@ -4,7 +4,7 @@
 	@php $viewName = 'articles.index'; @endphp
 	
 	<div class="page-header">
-		<h4>포럼<small> / 글 목록</small></h4>
+		<h4>{{ trans('forum.title') }}<small> / {{ trans('forum.articles.index') }}</small></h4>
 	</div>
 
 	<div class="row">
@@ -17,7 +17,7 @@
 		<div class="col-md-9">
 			<div class="text-right action__article">
 				<a href="{{ route('articles.create') }}" class="btn btn-primary">
-					<i class="fa fa-plus-circle"></i> 새 글 쓰기
+					<i class="fa fa-plus-circle"></i> {{ trans('forum.articles.create') }}
 				</a>
 				<div class="btn-group sort__article">
 					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">

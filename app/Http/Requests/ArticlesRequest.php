@@ -33,6 +33,7 @@ class ArticlesRequest extends FormRequest
         ];
     }
 
+    /*
     public function messages()
     {
         return [
@@ -48,4 +49,5 @@ class ArticlesRequest extends FormRequest
             'content' => '본문',
         ];
     }
+    */
 }
