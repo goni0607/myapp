@@ -181,6 +181,8 @@ return [
         Laracasts\Flash\FlashServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         Maknz\Slack\SlackServiceProvider::class,
+        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+        Appkr\Api\ApiServiceProvider::class,
     ],
 
     /*
@@ -233,6 +235,8 @@ return [
         'Flash' => Laracasts\Flash\Flash::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Slack' => Maknz\Slack\Facades\Slack::class,
+        'JWTAuth' => Mymon\JWTAuth\Facades\JWTAuth::class,
+        'JWTFactory' => Mymon\JWTAuth\Facades\JWTFactory::class,
     ],
 
 ];

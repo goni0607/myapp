@@ -17,7 +17,18 @@ Route::group([
 	'domain' => config('project.api_domain'), 
 	'namespace' => 'Api',
 	'as' => 'api.'], function() {
-		// 인증 관련 라우트
+		
+		/* 토큰 교환 요청(로그인) */
+		Route::post('auth/login', [
+			'as' 	=> 'sessions.store',
+			'uses'	=> 'SessionsController@store',
+		]);
+		Route::post('auth/refresh', [
+			'middleware' => 'jwt.refresh',
+			'as'		=> 'sessions.refresh',
+			function (){}
+		]);
+
 		Route::group([
 			'prefix' => 'v1',
 			'namespace' => 'v1',

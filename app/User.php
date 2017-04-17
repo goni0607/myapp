@@ -58,6 +58,12 @@ class User extends Authenticatable
     }
 
 
+    public function isSocialUser()
+    {
+        return is_null($this->password) && $this->activated;
+    }
+
+
     public function isAdmin()
     {
         return ($this->email === 'triplek@triplek.net') ? true : false;

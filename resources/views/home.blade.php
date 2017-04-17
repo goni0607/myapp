@@ -14,4 +14,5 @@
         </div>
     </div>
 </div>
+<?php phpinfo(); ?>
 @endsection

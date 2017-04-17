@@ -145,10 +145,10 @@ class ArticlesController extends Controller implements Cacheable
         */
 
         event(new \App\Events\ArticlesEvent($article));
-        event(new \App\Events\ModelChanged(['articles']));
+        // event(new \App\Events\ModelChanged(['articles']));
 
         // return redirect(route('articles.show', $article->id))->with('flash_message', '작성하신 글이 저장되었습니다.');
-        return respondCreated($article);
+        return $this->respondCreated($article);
 
         //return __METHOD__ . '은(는) 사용자의 입력한 폼 데이터로 새로운 Article 컬렉션을 만듭니다.';
     }

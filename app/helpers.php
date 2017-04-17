@@ -134,3 +134,15 @@ function array_transpose(array $data)
 
     return $res;
 }
+
+
+function jwt()
+{
+    return app('tymon.jwt.auth');
+}
+
+
+function is_api_domain()
+{
+    return starts_with(request()->getHttpHost(), config('project.api_domain'));
+}
